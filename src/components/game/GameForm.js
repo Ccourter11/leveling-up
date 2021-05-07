@@ -61,16 +61,7 @@ export const GameForm = () => {
 
             {/* You create the rest of the input fields for each game property */}
 
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="description">Description: </label>
-                    <input type="text" name="description" required autoFocus className="form-control"
-                    placeholder="Description"
-                    onChange={changeGameState}
-                    value={currentGame.description}/>
-                </div>
-            </fieldset>
-
+            
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="numberOfPlayers">Number of players: </label>
@@ -104,7 +95,7 @@ export const GameForm = () => {
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="gameType">Type of Game: </label>
-                     <select value={currentGame.gameTypeId} id="gameTypeId" className="form-control" onChange={changeGameState}>
+                     <select value={currentGame.gameTypeId} name="gameTypeId" className="form-control" onChange={changeGameState}>
                         <option value="0">Select a type</option>
                         {gameTypes.map(gt => (
                              <option key={gt.id} value={gt.id}>
