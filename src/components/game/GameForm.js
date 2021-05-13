@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from "react"
 import { GameContext } from "./GameProvider.js"
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 
 export const GameForm = () => {
     const history = useHistory()
-    const { createGame, getGameTypes, gameTypes } = useContext(GameContext)
+    const { getGame, createGame, getGameTypes, gameTypes, editGame } = useContext(GameContext)
+    const {gameId} = useParams()
 
     /*
         Since the input fields are bound to the values of
@@ -27,6 +28,20 @@ export const GameForm = () => {
     useEffect(() => {
         getGameTypes()
     }, [])
+
+    useEffect(() => {
+        if (gameId) {
+            getGame(gameId).then(game => {
+                setCurrentGame({
+                    skillLevel: game.skill_level,
+                    numberOfPlayers: game.number_of_players,
+                    title: game.title,
+                    gameTypeId: game.game_type.id,
+                    maker: game.maker
+                })
+            })
+        }
+    }, [gameId])
 
     /*
         REFACTOR CHALLENGE START
@@ -106,7 +121,24 @@ export const GameForm = () => {
                     </select>
                 </div>
             </fieldset>
-
+            {
+            (gameId)
+            ? <button type="submit"
+            onClick={evt => {
+                evt.preventDefault()
+                editGame({
+                    id: gameId,
+                    maker: currentGame.maker,
+                    title: currentGame.title,
+                    numberOfPlayers: parseInt(currentGame.numberOfPlayers),
+                    skillLevel: parseInt(currentGame.skillLevel),
+                    gameTypeId: parseInt(currentGame.gameTypeId)
+                })
+                history.push("/games")
+            }
+            }     
+            className="btn btn-primary">Edit</button>
+                    :           
             <button type="submit"
                 onClick={evt => {
                     // Prevent form from being submitted
@@ -125,6 +157,7 @@ export const GameForm = () => {
                         .then(() => history.push("/games"))
                 }}
                 className="btn btn-primary">Create</button>
+                }
         </form>
     )
 }
